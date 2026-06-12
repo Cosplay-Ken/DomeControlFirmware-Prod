@@ -51,10 +51,11 @@
     !defined(ROAM_A_DOME_COMPACT_PCB) && \
     !defined(LILYGO_MINI32) && \
     !defined(ROAM_A_DOME_DISPLAY)
-#error Make sure you select the correct PCB and remove this error
+//#error Make sure you select the correct PCB and remove this error
 //#define ROAM_A_DOME_FULLSIZE_PCB
-#define ROAM_A_DOME_COMPACT_PCB
+//#define ROAM_A_DOME_COMPACT_PCB
 //#define LILYGO_MINI32
+#define ROAM_A_DOME_DISPLAY
 #endif
 #elif defined(__AVR_ATmega2560__)
 #define ROAM_A_DOME_MEGA_PCB
@@ -199,7 +200,9 @@
 #define DOME_SENSOR_SERIAL_BAUD 57600
 #endif
 
-#define PACKET_SERIAL_TIMEOUT   1500
+// Changed this value from 1500 to better work with DroidLink. 
+// Timeout is now 10 seconds before RAD stops dome movement.
+#define PACKET_SERIAL_TIMEOUT   10000
 
 ///////////////////////////////////
 
@@ -376,7 +379,7 @@ public:
     virtual void show() override
     {
         PulseInputEnd();
-        SingleStatusLED<STATUSLED_PIN>::show();
+        SingleStatusLED<STATUSLED_PIN>::showLED();
         PulseInputBegin();
     }
 };
