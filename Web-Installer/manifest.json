@@ -1,0 +1,23 @@
+{
+  "name": "Dome Control Firmware with Splash",
+  "version": "1.0.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "flashMode": "qio",
+      "flashFreq": "40m",
+      "flashSize": "16MB",
+      "parts": [
+        { 
+          "path": "DomeControl_Factory_Image.bin", 
+          "offset": "0x0" 
+        },
+        { 
+          "path": "spiffs.bin", 
+          "offset": "0x290000" 
+        }
+      ]
+    }
+  ]
+}

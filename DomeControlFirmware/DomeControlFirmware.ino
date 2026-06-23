@@ -131,6 +131,7 @@
 #define DEFAULT_SERIAL_BAUD             9600
 #define DEFAULT_PACKET_SERIAL_INPUT     true
 #define DEFAULT_PACKET_SERIAL_OUTPUT    true
+#define DEFAULT_PACKET_SERIAL_TIMEOUT   1500
 #define DEFAULT_PWM_ARC_MODE            false
 #define DEFAULT_PWM_INPUT               false
 #define DEFAULT_PWM_OUTPUT              false
@@ -199,10 +200,6 @@
 // Default dome sensor baud rate is 57600 for Mega
 #define DOME_SENSOR_SERIAL_BAUD 57600
 #endif
-
-// Changed this value from 1500 to better work with DroidLink. 
-// Timeout is now 10 seconds before RAD stops dome movement.
-#define PACKET_SERIAL_TIMEOUT   10000
 
 ///////////////////////////////////
 
@@ -915,6 +912,7 @@ struct DomeControllerSettings
     uint32_t fSerialBaudRate = DEFAULT_SERIAL_BAUD;
     bool fPacketSerialInput = DEFAULT_PACKET_SERIAL_INPUT;
     bool fPacketSerialOutput = DEFAULT_PACKET_SERIAL_OUTPUT;
+    uint32_t fPacketSerialTimeout = DEFAULT_PACKET_SERIAL_TIMEOUT;
     bool fPWMInput = DEFAULT_PWM_INPUT;
     bool fPWMArcMode = DEFAULT_PWM_ARC_MODE;
     bool fPWMOutput = DEFAULT_PWM_OUTPUT;
@@ -3526,7 +3524,9 @@ void mainLoop()
         }
         while (DOME_DRIVE_SERIAL_READ.available());
     }
-    if (sSerialMotorActivity && sLastSerialMotorEvent + PACKET_SERIAL_TIMEOUT < millis())
+    if (sSettings.fPacketSerialTimeout > 0 &&
+      sSerialMotorActivity &&
+      sLastSerialMotorEvent + sSettings.fPacketSerialTimeout < millis())
     {
     #ifdef STATUSLED_PIN
         statusLED.setMode(sCurrentMode);

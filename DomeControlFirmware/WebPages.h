@@ -107,6 +107,15 @@ WElement domeContents[] = {
     WCheckbox("Auto Movement Restart", "autorestart",
         []() { return sSettings.fAutoRestart; },
         [](bool val) { sSettings.fAutoRestart = val; sDomeSettingsChanged = true; } ),
+    WSlider("Packet Serial Timeout (ms) (0=Disabled)", "pktTimeout", 0, 30000,
+        []()->int { return sSettings.fPacketSerialTimeout; },
+        [](int val)
+        {
+            if (val < 0) val = 0;
+            if (val > 30000) val = 30000;
+            sSettings.fPacketSerialTimeout = val;
+            sDomeSettingsChanged = true; 
+        }),
     WSlider("Minimum Speed", "minspeed", 0, MAX_SPEED,
         []()->int { return sSettings.fDomeSpeedMin; },
         [](int val) { sSettings.fDomeSpeedMin = val; sDomeSettingsChanged = true; } ),
@@ -128,6 +137,7 @@ WElement domeContents[] = {
         sSettings.fMaxSpeed = DEFAULT_MAX_SPEED;
         sSettings.fPacketSerialInput = DEFAULT_PACKET_SERIAL_INPUT;
         sSettings.fPacketSerialOutput = DEFAULT_PACKET_SERIAL_OUTPUT;
+        sSettings.fPacketSerialTimeout = DEFAULT_PACKET_SERIAL_TIMEOUT;
         sSettings.fPWMInput = DEFAULT_PWM_INPUT;
         sSettings.fPWMOutput = DEFAULT_PWM_OUTPUT;
         sSettings.fDomeAutoLeft = DEFAULT_DOME_FUDGE;
